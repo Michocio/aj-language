@@ -35,7 +35,7 @@ Implemented features:
 * anonymous functions
 * ested functions with static binding
 
-<h2> Opis funkcjonalności </h2>
+<h2> Features </h2>
 
 <h3> Typy </h3>
 
@@ -89,12 +89,10 @@ Allows you to print almost any type, listing your own type (object) prints a lis
 My grammar is long - it results from a lot of syntactic sugar.
 Assignment prescribes value, not pointer, but the construction of the environment appropriately allows you to assign indicators as well.
 
+**Checkout examples dirs**
+
 <h1> Compiling </h1>
 Just type make in main folder
-
-
-<h4> Notes </h4>
-Checkout examples dirs
 
 
 
