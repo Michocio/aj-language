@@ -1,0 +1,44 @@
+// Trochę zagnieżdżeń
+int x =7;
+bool prawda = true;
+text pusty = "", pelny = "pelny";
+
+if(not pusty)
+{
+  pusty = "abc";
+  if(pusty == "ab")
+  {
+    pusty="x";// pusty = abc
+    //x--
+  }
+  elseif(pusty == "x")
+  {
+    pusty = "y";
+    if(0 == 1)
+      x++
+    else
+    {
+      double x = 0;
+      if(x == 7)
+        prawda = false;
+    }
+    pelny = "";
+  }
+  else
+  {
+    if(prawda)
+    {
+      x--
+    }
+    elseif(not prawda and pusty)
+     x = 1;
+  }
+}
+
+
+
+
+
+
+
+

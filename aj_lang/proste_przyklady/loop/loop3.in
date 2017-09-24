@@ -1,0 +1,4 @@
+loop(int x = 0;true)
+{
+   int x = 0;
+}

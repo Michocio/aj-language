@@ -1,0 +1,7 @@
+// Prosty test if + else
+int x = 3;
+if(x == 4)
+  x=4;
+else
+  text x="ab";
+print(x);

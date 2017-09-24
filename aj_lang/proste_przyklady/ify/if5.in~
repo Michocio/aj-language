@@ -1,0 +1,7 @@
+// Dowolna ilość elseif
+if(3)
+  x=4;
+elseif (4)
+  x=5;
+elseif (8)
+  x=2+3;

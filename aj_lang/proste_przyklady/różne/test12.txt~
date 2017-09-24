@@ -1,0 +1,2 @@
+int tab[];
+apply ([int x] -> (2*x)) tab

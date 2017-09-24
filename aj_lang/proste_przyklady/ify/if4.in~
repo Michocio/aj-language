@@ -1,0 +1,6 @@
+// Bez else
+if(3)
+  x=4;
+elseif (4)
+  x=5;
+

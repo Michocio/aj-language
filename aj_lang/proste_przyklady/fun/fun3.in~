@@ -1,0 +1,4 @@
+testowaFun :: [text nazwa] -> [text nazwa_nowa]
+{
+   nazwa_nowa = nazwa + "x";
+}

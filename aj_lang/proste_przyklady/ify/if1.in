@@ -1,0 +1,5 @@
+// Prosty test, sam if
+int x;
+if(3)
+  x=4;
+print(x);

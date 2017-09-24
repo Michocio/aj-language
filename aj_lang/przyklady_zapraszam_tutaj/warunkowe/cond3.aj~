@@ -1,0 +1,11 @@
+int czy = 1;
+
+if(czy == 0)
+{
+  println(czy);
+  println("drugie");
+}
+else if(czy == 1 )
+ println("drugie");
+else
+  println(false);

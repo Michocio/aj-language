@@ -1,0 +1,5 @@
+testowaFun :: [text nazwa] -> [text nazwa_nowa]
+{
+   returns.nazwa_nowa = nazwa + "x";
+}
+println("X");

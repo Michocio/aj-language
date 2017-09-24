@@ -1,0 +1,6 @@
+// Pętla prosta z instrukcją w środku
+loop(true)
+{
+  int x = 7;
+  x++
+}

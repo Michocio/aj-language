@@ -1,0 +1,14 @@
+int [10][10] plansza;
+
+loop(int x = 0; x< 10; x++)
+  loop(int y = 0; y< 10; y++)
+    plansza[x][y] = x;
+
+loop(int x = 0; x< 10; x++)
+{
+  loop(int y = 0; y< 10; y++)
+  {
+    print(plansza[x][y]); print(" ");
+  }
+  println("");
+}

@@ -1,0 +1,9 @@
+// Połączenie elseif i else
+int x = 5;
+if(x==3)
+  x=4;
+elseif (x==4)
+  x=5;
+else
+  x=7;
+print(x);

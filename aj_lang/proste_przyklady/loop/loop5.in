@@ -1,0 +1,4 @@
+loop(int x = 0, z=1 | double d = 0;true; x++, --z, d+=1)
+{
+   int x = 0;
+}

@@ -1,0 +1,12 @@
+// Zagnieżdżenie ifów
+if(true)
+{
+  int x = 7;
+  int y = 8;
+  if(x == y)
+  {
+    x= 7;
+  }
+  else
+    y=7;
+}

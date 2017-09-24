@@ -1,0 +1,283 @@
+-- Gramatyka Michał Jaroń
+-- mj348711
+  --Uwaga mam 9 shift/shift conflicts, z którymi nie bardzo umiem powalczyć,
+  --nawet po zajęciach z LR :) . Mam nadzieję, że to na razie nie problem i będzie
+  --możliwość o tym porozmawiać już po sprawdzeniu specyfikacji.
+
+comment "//" ;
+comment "/*" "*/" ;
+
+Program.	Prog		::= [Inst] ;
+
+token ClassName	((upper) (letter)+);
+
+-- Typy wbudowane
+CustomType.	Type		::= ClassName ;
+TInt. 		Type		::= "int" ;
+TText. 		Type		::= "text" ;
+TAny.		Type		::= "any" ;
+TBool.		Type		::= "bool" ;
+TDouble.	Type		::= "double" ;
+TArray.		Type		::= Type Array ;	
+
+ArraySymbol.	Array		::= "["Exp"]";
+	
+
+(:[]).		[Type]	::= Type ;
+(:).		[Type]	::= Type "," [Type] ;
+
+
+-- Użyte w celu umożliwienia przeplatania instrukcji i deklaracji
+[].		[Inst]		::= ;
+(:).		[Inst]		::= Inst [Inst] ;
+
+-- Co może zostać wywołane jako osobna instrukcja
+InstrD.		Inst		::= Decl;
+InstrS.		Inst		::= Stmt;
+InstrExpr.	Inst		::= Exp;
+InstrLoop.	Inst		::= Loop ;
+InstrFor.	Inst		::= For ;
+InstrFun.	Inst		::= Fun ;
+InstrClass.	Inst		::= ClassHeader;
+IApply.		Inst		::= "apply" Ident Ident;
+IApplyAn.	Inst		::= "apply" Lambda Ident ";";
+
+
+
+Print.		Inst		::= "print" "(" Exp ")"";" ;
+PrintLn.	Inst		::= "println" "(" Exp ")"";" ;
+Read.		Inst		::= "read" "(" Ident ")"";";
+
+[].		[Decl]		::= ;
+(:).		[Decl]		::= Decl [Decl] ;
+
+[].		[Stmt]		::= ;
+(:).		[Stmt]		::= Stmt [Stmt] ;
+
+
+
+
+-- Deklaracje
+-- Deklaracje i definicje możliwe po przecinkach, na końcu średnik
+Declare.	Decl		::= Type [Var] ";" ;
+-- deklaracja
+VarName.	Var		::= Ident ;
+
+-- definicja
+VarAssin.	Var		::= Ident "=" Exp ;
+
+(:[]).		[Var]		::= Var ;
+(:).		[Var]		::= Var "," [Var] ;
+
+-- Przypisania
+-- Właściwie to samo co VarName, ale do ogólnego użycia
+VAssin.		Stmt		::= Ident "=" Exp ";";
+
+FieldAssin.	Stmt		::= Ident"."Ident "=" Exp ";";
+VAssinArrField.	Stmt		::= Ident"." Ident  "[" Exp "]" [Elem] "=" Exp ";";
+
+VAssinArr.	Stmt		::= Ident "[" Exp "]" [Elem]  "=" Exp ";";
+VAssinFieldArr.	Stmt		::= Ident "[" Exp "]" [Elem]"."Ident  "=" Exp ";";
+
+VAssinPlus.	Stmt		::= Ident "+=" Exp ";";
+VAssinMulti.	Stmt		::= Ident "*=" Exp ";";
+VAssinMinus.	Stmt		::= Ident "-=" Exp ";";
+VAssinDiv.	Stmt		::= Ident "/=" Exp ";";
+
+
+
+
+-- If
+-- Instrukcja warunkowa if
+-- elseif, dowolna ilość
+
+SElIf.		ElIf		::= "elseif" "(" Exp ")" Inst;
+SElIfMore.	ElIf		::= "elseif" "(" Exp ")" "{" [Inst] "}";
+
+terminator ElIf "";
+
+SIfOne.		Stmt		::= "if" "(" Exp ")" Inst [ElIf];
+SIfTwo.		Stmt		::= "if" "(" Exp ")" Inst [ElIf] "else" Inst ;
+SIfFourMore.	Stmt		::= "if" "(" Exp ")" Inst [ElIf] "else" "{" [Inst] "}" ;
+
+SIfOneMore.	Stmt		::= "if" "(" Exp ")" "{" [Inst] "}" [ElIf];
+SIfTwoMore.	Stmt		::= "if" "(" Exp ")" "{" [Inst] "}" [ElIf] "else" Inst ;
+SIfThreeMore.	Stmt		::= "if" "(" Exp ")" "{" [Inst] "}" [ElIf] "else" "{" [Inst] "}";
+
+
+
+-- Switch
+Switch.		Stmt		::= "switch" "(" Exp ")" "{" [Case] "}" "else" "{" [Inst] "}"  ;
+Switch2.	Stmt		::= "switch" "(" Exp ")" "{" [Case] "}" ;
+
+CasesVal.	Case		::= "case" Exp ":" "{" [Inst] "}" ;
+--CasesType.	Case		::= "type" Type ":" "{" [Inst] "}" ;
+[].		[Case]		::= ;
+(:).		[Case]		::= Case [Case] ;	
+
+
+
+
+-- Exp
+[].		[Exp]		::= ;
+(:[]).		[Exp]		::= Exp;
+(:).		[Exp]		::= Exp "," [Exp];
+
+-- Wyrażenia "logiczne"
+-- Tutaj przyznam się bez bicia, miałem mały problem z określeniem priorytetu
+-- Początkowo używałem Exp na tym samym poziomie, ustawiając odpowiednio w kolejności
+-- kolejne Exp, bnfc w razie konfliktu wybiera wtedy produkcje wyżej w pliku.
+-- Myślę, że poniższe priortety są całkiem poprawnie określone, choć w tym miejscu
+-- mam świadomość, że muszę to przebudować.
+
+Etrue.	       	Exp18 		::= "true";
+Efalse.	       	Exp18 		::= "false";
+LogicalAnd.	Exp2		::= Exp2 "and" Exp3;
+LogicalOr.	Exp2		::= Exp2 "or" Exp3;
+LogicalNot.	Exp13		::= "not" Exp13;
+
+
+Eeq.         	Exp8  		::= Exp8 "==" Exp9;
+Eneq.        	Exp8  		::= Exp8 "!=" Exp9;
+ELess.		Exp9		::= Exp9 "<" Exp10;
+EBigg.		Exp9		::= Exp9 ">" Exp10;
+ELessEq.	Exp9		::= Exp9 "<=" Exp10;
+EBiggEq.	Exp9		::= Exp9 ">=" Exp10;
+
+EAdd. 		Exp10  		::= Exp10  "+" Exp11 ;
+ESub. 		Exp10 		::= Exp10  "-" Exp11 ;
+EMul. 		Exp11 		::= Exp11 "*" Exp12 ;
+EDiv. 		Exp11 		::= Exp11 "/" Exp12 ;
+--EDivRes. 	Exp11 		::= Exp11 "div" Exp12 ;
+EMod. 		Exp11		::= Exp11 "%" Exp12 ;
+EPow.		Exp12		::= Exp12 "^" Exp13 ;
+
+ESqrt.		Exp13		::= "sqrt""(" Exp13 ")";
+EAbs.		Exp13		::= "abs" Exp13;
+
+Epreinc.     	Exp14 		::= "++" Exp14;
+Epredec.     	Exp14 		::= "--" Exp14;
+Epostinc.    	Exp15 		::= Exp15 "++";
+Epostdec.    	Exp15 		::= Exp15 "--";
+
+
+ECons.		Exp16		::= "<<" [Exp] ">>";
+EString.	Exp16		::= String ;
+EInt. 		Exp16		::= Integer ;
+EDouble.	Exp16		::= Double ;
+ECall.		Exp16		::= Call;
+ENeg.		Exp16		::= Negative ; -- liczba ujemna
+EScope.		Exp16		::= "scope" "." Ident;
+EObj.		Exp17		::= Ident"."Ident ;
+EVar.		Exp18		::= Ident ;
+EArr.		Exp19		::= Ident "[" Exp "]" [Elem] ;
+EFieldAr.	Exp19		::= Ident "[" Exp "]" [Elem]"."Ident ;
+EArrField.	Exp19		::= Ident"." Ident "[" Exp "]" [Elem];
+ELam.		Exp19		::= Lambda ;
+
+ArrElem.	Elem		::= "[" Exp "]";
+[].		[Elem]		::= ;
+(:).		[Elem]		::= Elem [Elem];
+coercions Exp 20 ;
+
+
+token Negative	('-' (digit)+);
+
+ForTo.			For		::= "for"  Type Ident  ":=" Exp "to" Exp Inst;
+ForToMulti.		For		::= "for"  Type Ident  ":=" Exp "to" Exp "{" [Inst] "}";
+ForDownTo.		For		::= "for"  Type Ident  ":=" Exp "downto" Exp Inst;
+ForDownToMulti.		For		::= "for"  Type Ident  ":=" Exp "downto" Exp "{" [Inst] "}";
+
+
+-- Loop
+-- Pętla loop
+-- Pętla jedno-instukcjowa
+LoopInst.	Loop		::= "loop" "(" LoopVars Exp LoopHow ")" Inst ;
+-- Wiele intrukcji
+LoopInstMulti.	Loop		::= "loop" "(" LoopVars Exp LoopHow ")" "{" [Inst] "}" ;
+
+-- Część/argumenty definicji loop
+LoopDecli.	LoopVars 	::= [LoopDecl] ";" ;
+LoopDeclEps.	LoopVars 	::= ;
+
+LoopDo.		LoopHow		::= ";" [IterExp] ;
+LoopDoEps. 	LoopHow		::= ;
+
+
+[].		[LoopDecl]	::= ;
+(:[]).		[LoopDecl]	::= LoopDecl;
+(:).		[LoopDecl]	::= LoopDecl "|" [LoopDecl] ;
+DeclareLoop.	LoopDecl	::= Type [VarLoop];
+-- No poziomie składniowym sprawdzam, ża wartośći zainicjalizowane
+LoopAssin.	VarLoop		::= Ident "=" Exp ;
+
+(:[]).		[VarLoop]	::= VarLoop ;
+(:).		[VarLoop]	::= VarLoop "," [VarLoop] ;
+
+
+[].		[IterExp] 	::= ;
+(:[]).		[IterExp] 	::= IterExp;
+(:).		[IterExp] 	::= IterExp "," [IterExp];
+IterExpr.	IterExp		::= Exp ;
+IterExpr2.	IterExp		::= LoopStmt ;
+
+
+VAssinPlusL.	LoopStmt	::= Ident "+=" Exp;
+VAssinMultiL.	LoopStmt	::= Ident "*=" Exp;
+VAssinMinusL.	LoopStmt	::= Ident "-=" Exp;
+VAssinDivL.	LoopStmt	::= Ident "/=" Exp;
+
+
+-- Fun
+-- Funkcje
+FunDecl.	Fun		::= Ident "::" ParamsList "{" [Inst] "}" ;
+
+-- "Heading" definicji funkcji
+FunParamList.	ParamsList	::=  "[" [FunArgs] "]" "->" "[" [FunArgs]"]" ;
+
+
+
+-- Zmienna przez wartość jako parametr
+FunVar.		FunArgs		::= Type Ident ;
+-- Funkcja jako parametr
+FunFunny.	FunArgs		::= Ident "::"ParamsList ;
+[].		[FunArgs]	::= ;
+(:[]).		[FunArgs]	::= FunArgs ;
+(:).		[FunArgs]	::= FunArgs "," [FunArgs] ;
+
+-- Funkcja jako parametr
+FunFun.		FunParam 	::= Ident "::" "(" ParamsList ")" ;
+
+-- Wywołanie funkcji
+CallFun.	Call		::= Ident "(" [RealParam] ")" ;
+-- Parematry aktualne
+--RealParamFun.	RealParam	::= Lambda ;
+RealParamVal.	RealParam	::= Exp ;
+[].		[RealParam]	::= ;
+(:[]).		[RealParam]	::= RealParam ;
+(:).		[RealParam]	::= RealParam "," [RealParam] ;
+
+
+-- Lambda funkcje
+LamFun.		Lambda		::= "(" Type "::" "[" [LambdaParams] "]" "->" "(" Exp ")" ")" ;
+	
+LambdaParam.	LambdaParams 	::= Type Ident;
+[].		[LambdaParams]	::= ;
+(:[]).		[LambdaParams]	::= LambdaParams ;
+(:).		[LambdaParams]	::= LambdaParams "," [LambdaParams] ;
+
+
+
+-- Class
+-- Klasy
+ClassDec.	ClassHeader ::= "class" ClassName "{" [ClassStmt] "}";
+
+ClassBody.	ClassBlock	::= "{" [ClassStmt] "}" ;
+
+
+ClassVar.	ClassStmt	::=  Decl ;
+[].		[ClassStmt]	::= ;
+(:).		[ClassStmt]	::= ClassStmt [ClassStmt];
+
+
+

@@ -1,0 +1,6 @@
+// Pętla prosta z instrukcją w środku
+loop(int x=0, z=0 |double it =0 ; true)
+{
+  int x = 7;
+  x++
+}

@@ -1,0 +1,4 @@
+testowaFun :: [text nazwa, int i] -> [text nazwa_nowa]
+{
+   returns.nazwa_nowa = nazwa + i;// Konwersja i na text
+}

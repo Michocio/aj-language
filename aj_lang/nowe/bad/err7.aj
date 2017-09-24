@@ -1,0 +1,5 @@
+// duplicatedFunErr
+fun :: [] -> [] {}
+fun :: [] -> [] {}
+
+

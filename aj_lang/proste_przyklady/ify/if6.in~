@@ -1,0 +1,20 @@
+// Wiele intrukcji w {}
+if(2 != 3)
+{
+  x=4;
+  int x =7;
+}
+elseif (false)
+{
+  x=5;
+  bool czy = true;
+  if(not czy)
+    czy = true;
+}
+elseif ("ala_ma_kota")// Tak jak w js, pusty string == false, niepusty == true
+  x=2+3;
+else
+{
+  // Komentarz
+  x++
+}

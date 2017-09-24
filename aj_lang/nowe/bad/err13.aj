@@ -1,0 +1,2 @@
+//undeclaredCallErr
+fun(3)

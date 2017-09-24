@@ -1,0 +1,6 @@
+loop(text i = "a"; i != "aaa"; i+= "a")
+{
+   int x = 0;
+   loop(int x = 0; i < 10; i++)
+     ;
+}

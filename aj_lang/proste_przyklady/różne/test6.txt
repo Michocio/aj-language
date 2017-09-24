@@ -1,0 +1,4 @@
+// Pętla prosta
+loop(true)
+{
+}

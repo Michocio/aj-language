@@ -1,0 +1,14 @@
+// Test przeplatania definicji i innych instrukcji
+int x, y;
+if(true)
+  x=2;
+
+text ab ="a";
+if(true)
+  x=2;
+elseif(false)
+  y = 3;
+
+double to;
+x++
+any oh;

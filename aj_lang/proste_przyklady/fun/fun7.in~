@@ -1,0 +1,7 @@
+testowaFun :: [text nazwa, int i, fun::([int a] -> [int b]) | more] -> [text nazwa_nowa , int val | more]
+{
+   nazwa_nowa = nazwa + i;// Konwersja i na text
+   int extra = params[0];
+   val = fun(i);
+   return[0] = "dodatek";
+}

@@ -1,0 +1,3 @@
+//notArrErr
+int x;
+x[10] = 0;

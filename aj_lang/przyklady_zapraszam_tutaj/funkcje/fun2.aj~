@@ -1,0 +1,10 @@
+// Prosta funkcja zwracaja to co dostanie + 1
+
+fun :: [int x] -> [int y]
+{
+  println(x);
+  returns.y = x + 1;
+}
+
+// Wypisuje dwa razy - raz w funkcji, raz jako wartosc zwrocona
+println(fun(7));

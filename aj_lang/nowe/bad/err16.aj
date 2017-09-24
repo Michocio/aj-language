@@ -1,0 +1,3 @@
+//undeclaredClassErr
+
+Test a;
